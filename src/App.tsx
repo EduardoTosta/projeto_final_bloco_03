@@ -6,6 +6,9 @@ import Footer from "./components/footer/Footer";
 import ListaCategorias from "./components/categorias/listacategorias/ListaCategorias";
 import DeletarTema from "./components/categorias/deletarcategoria/DeletarCategoria";
 import FormCategoria from "./components/categorias/formcategoria/FormCategoria";
+import ListaProdutos from "./components/produtos/produtos/listaprodutos/ListaProdutos";
+import FormProduto from "./components/produtos/produtos/formprodutos/FormProdutos";
+import DeletarProduto from "./components/produtos/produtos/deletarproduto/DeletarProduto";
 
 function App() {
   return (
@@ -20,6 +23,10 @@ function App() {
             <Route path="/deletar/:id" element={<DeletarTema />} />
             <Route path="/cadastrarcategoria" element={<FormCategoria />} />
             <Route path="/editarcategoria/:id" element={<FormCategoria />} />
+            <Route path="/produtos" element={<ListaProdutos />} />
+            <Route path="/cadastrarproduto" element={<FormProduto />} />
+            <Route path="/editarproduto/:id" element={<FormProduto />} />
+            <Route path="/deletarproduto/:id" element={<DeletarProduto />} />
           </Routes>
         </div>
         <Footer />

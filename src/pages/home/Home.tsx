@@ -1,3 +1,6 @@
+import ListaProdutos from "../../components/produtos/produtos/listaprodutos/ListaProdutos";
+import ModalProduto from "../../components/produtos/produtos/modalprodutos/ModalProduto";
+
 function Home() {
   return (
     <>
@@ -5,14 +8,13 @@ function Home() {
         <div className="container grid grid-cols-2 text-white">
           <div className="text-black flex flex-col gap-4 items-center justify-center py-4">
             <h2 className="text-5xl font-bold">Seja Bem Vindo!</h2>
-            <p className="text-xl">Aqui você encontra os melhores Games!</p>
+            <p className="text-xl">
+              Aqui você encontra os melhores medicamentos!
+            </p>
 
             <div className="flex justify-around gap-4">
-              <div
-                className="rounded text-black 
-                                            border-black border-solid border-2 py-2 px-4"
-              >
-                Novo Produto
+              <div className="flex justify-around gap-4">
+                <ModalProduto />
               </div>
             </div>
           </div>
@@ -26,6 +28,7 @@ function Home() {
           </div>
         </div>
       </div>
+      <ListaProdutos />
     </>
   );
 }
