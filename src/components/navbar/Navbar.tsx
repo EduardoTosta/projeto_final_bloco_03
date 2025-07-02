@@ -22,11 +22,11 @@ function Navbar() {
           />
           <button
             className="p-3 rounded-md hover:opacity-90"
-            style={{ backgroundColor: "#00E0C0" }}
+            style={{ backgroundColor: "#67E8F9" }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-white"
+              className="h-5 w-5 text-black"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -49,7 +49,7 @@ function Navbar() {
           <Link to="/categorias" className="hover:opacity-80">
             Categorias
           </Link>
-          <Link to="/cadastrar-categoria" className="hover:opacity-80">
+          <Link to="/cadastrarcategoria" className="hover:opacity-80">
             Cadastrar categoria
           </Link>
 
