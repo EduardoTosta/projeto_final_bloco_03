@@ -1,14 +1,39 @@
+import { useState, useEffect, type ChangeEvent } from "react";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { Categoria } from "../../../models/Categoria";
-import { useState, type ChangeEvent } from "react";
-import { cadastrar } from "../../../service/Service";
+import { atualizar, cadastrar, consultar } from "../../../service/Service";
+// ajuste o caminho se necessário
 
 function FormCategoria() {
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [categoria, setCategoria] = useState<Categoria>({} as Categoria);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { id } = useParams<{ id: string }>();
+
+  async function buscarCategoriaPorId(id: string) {
+    try {
+      await consultar(`/categorias/${id}`, setCategoria);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      alert("Categoria não encontrada!");
+      retornar();
+    }
+  }
+
+  useEffect(() => {
+    if (id !== undefined) {
+      buscarCategoriaPorId(id);
+    } else {
+      setCategoria({
+        id: 0,
+        nome: "",
+        produto: [], // <-- essa é a propriedade que está faltando
+      });
+    }
+  }, [id]);
 
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setCategoria({
@@ -17,42 +42,58 @@ function FormCategoria() {
     });
   }
 
-  async function enviarFormulario(e: ChangeEvent<HTMLFormElement>) {
+  async function gerarNovaCategoria(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      await cadastrar("/categorias", categoria, setCategoria);
-      alert("Categoria cadastrada com sucesso!");
-      navigate("/categorias"); // Navega para lista de categorias (ajuste a rota se necessário)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      alert("Erro ao cadastrar a categoria.");
+    if (id !== undefined) {
+      try {
+        await atualizar(`/categorias`, categoria, setCategoria);
+        alert("Categoria atualizada com sucesso");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+      } catch (error: any) {
+        alert("Erro ao atualizar a Categoria");
+      }
+    } else {
+      try {
+        await cadastrar(`/categorias`, categoria, setCategoria);
+        alert("Categoria cadastrada com sucesso");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+      } catch (error: any) {
+        alert("Erro ao cadastrar a Categoria");
+      }
     }
 
     setIsLoading(false);
+    retornar();
+  }
+
+  function retornar() {
+    navigate("/categorias");
   }
 
   return (
     <div className="container flex flex-col items-center justify-center mx-auto">
-      <h1 className="text-4xl text-center my-8">Cadastrar categoria</h1>
+      <h1 className="my-8 text-4xl text-center text-black">
+        {id === undefined ? "Cadastrar Categoria" : "Editar Categoria"}
+      </h1>
 
-      <form className="w-1/2 flex flex-col gap-4" onSubmit={enviarFormulario}>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="descricao">Descrição da Categoria</label>
+      <form className="flex flex-col w-1/2 gap-4" onSubmit={gerarNovaCategoria}>
+        <div className="flex flex-col gap-2 text-black">
+          <label htmlFor="nome">Categoria</label>
           <input
             type="text"
-            placeholder="Descreva aqui sua categoria"
+            placeholder="Categoria"
             name="nome"
-            className="border-2 border-slate-700 rounded p-2"
-            value={categoria.nome || ""}
+            value={categoria.nome}
+            className="p-2 border-2 rounded border-slate-700 bg-indigo-50 text-black"
+            required
             onChange={atualizarEstado}
           />
         </div>
         <button
-          className="rounded text-slate-100 bg-indigo-400 hover:bg-indigo-800 w-1/2 py-2 mx-auto flex justify-center"
+          className="flex justify-center w-1/2 py-2 mx-auto rounded text-slate-100 bg-indigo-800  hover:bg-indigo-500"
           type="submit"
-          disabled={isLoading}
         >
           {isLoading ? (
             <RotatingLines
@@ -63,7 +104,7 @@ function FormCategoria() {
               visible={true}
             />
           ) : (
-            "Cadastrar"
+            <span>{id === undefined ? "Cadastrar" : "Atualizar"}</span>
           )}
         </button>
       </form>
